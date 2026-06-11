@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Project } from './types';
 import Header from './components/Header';
 import { MessageCircle } from 'lucide-react';
@@ -10,10 +10,14 @@ import ServicesPage from './pages/ServicesPage';
 import PortfolioPage from './pages/PortfolioPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import BriefingPage from './pages/BriefingPage';
 
 export default function App() {
   const [budgetOpen, setBudgetOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const location = useLocation();
+  const isBriefingRoute = location.pathname === '/briefing';
 
   return (
     <div className="min-h-screen bg-[#050505] text-[#e5e2e1] font-sans overflow-x-hidden flex flex-col justify-between selection:bg-[#00E0FF]/30 selection:text-white">
@@ -21,10 +25,10 @@ export default function App() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-tr from-[#00E0FF]/5 via-transparent to-[#8A3FFC]/5 opacity-40 blur-3xl pointer-events-none -z-10" />
 
       {/* Corporate Header Nav */}
-      <Header openBudgetModal={() => setBudgetOpen(true)} />
+      {!isBriefingRoute && <Header openBudgetModal={() => setBudgetOpen(true)} />}
 
       {/* Main active layout */}
-      <main className="flex-grow w-full pt-20">
+      <main className={`flex-grow w-full ${isBriefingRoute ? '' : 'pt-20'}`}>
         <Routes>
           <Route path="/" element={<HomePage onOpenBudget={() => setBudgetOpen(true)} />} />
           <Route path="/servicos" element={<ServicesPage onOpenBudget={() => setBudgetOpen(true)} />} />
@@ -37,14 +41,16 @@ export default function App() {
           } />
           <Route path="/sobre" element={<AboutPage />} />
           <Route path="/contato" element={<ContactPage />} />
+          <Route path="/briefing" element={<BriefingPage />} />
           <Route path="*" element={<HomePage onOpenBudget={() => setBudgetOpen(true)} />} />
         </Routes>
       </main>
 
       {/* Institutional Footer */}
-      <Footer openBudgetModal={() => setBudgetOpen(true)} />
+      {!isBriefingRoute && <Footer openBudgetModal={() => setBudgetOpen(true)} />}
 
       {/* Floating WhatsApp Button */}
+      {!isBriefingRoute && (
       <a
         href="https://wa.me/5521974976130?text=Ol%C3%A1%21%20Gostaria%20de%20conversar%20sobre%20um%20projeto%20com%20a%20%C3%8Dcone%20Digital."
         target="_blank"
@@ -56,6 +62,7 @@ export default function App() {
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
         </svg>
       </a>
+      )}
 
       {/* Budget Modal overlay drawer */}
       <BudgetModal 
