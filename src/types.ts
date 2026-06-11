@@ -55,9 +55,8 @@ export interface BudgetForm {
   serviceInterest: string;
   projectBudget: string;
   whatsapp: string;
-  briefingName: string;
-  briefingIdea: string;
-  briefingColors: string;
-  briefingTypography: string;
-  briefingLogo: string;
+  briefingChallenge: string;
+  briefingAudience: string;
+  briefingReferences: string;
+  briefingTimeline: string;
 }

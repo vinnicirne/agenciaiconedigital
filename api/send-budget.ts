@@ -23,7 +23,7 @@ export default async function handler(req: any, res: any) {
       throw new Error('RESEND_API_KEY não está configurada no ambiente.');
     }
 
-    const { name, email, whatsapp, company, serviceInterest, projectBudget, briefingName, briefingIdea, briefingColors, briefingTypography, briefingLogo } = req.body;
+    const { name, email, whatsapp, company, serviceInterest, projectBudget, briefingChallenge, briefingAudience, briefingTimeline, briefingReferences } = req.body;
 
     const emailHtml = `
       <h2>Novo Pedido de Orçamento - Ícone Digital</h2>
@@ -39,13 +39,12 @@ export default async function handler(req: any, res: any) {
         <li><strong>Serviço:</strong> ${serviceInterest}</li>
         <li><strong>Orçamento:</strong> ${projectBudget}</li>
       </ul>
-      <h3>Briefing:</h3>
+      <h3>Briefing Executivo:</h3>
       <ul>
-        <li><strong>Nome do Projeto:</strong> ${briefingName}</li>
-        <li><strong>Ideia Central:</strong> ${briefingIdea}</li>
-        <li><strong>Cores:</strong> ${briefingColors || 'Não informadas'}</li>
-        <li><strong>Tipografia:</strong> ${briefingTypography || 'Não informada'}</li>
-        <li><strong>Referências/Logo:</strong> ${briefingLogo || 'Nenhuma'}</li>
+        <li><strong>Maior Desafio:</strong> ${briefingChallenge}</li>
+        <li><strong>Público-Alvo:</strong> ${briefingAudience || 'Não detalhado'}</li>
+        <li><strong>Prazo:</strong> ${briefingTimeline || 'Não definido'}</li>
+        <li><strong>Referências/Benchmarks:</strong> ${briefingReferences || 'Nenhuma'}</li>
       </ul>
     `;
 

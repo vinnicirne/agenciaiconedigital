@@ -22,11 +22,10 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
     company: '',
     serviceInterest: 'Criação de Sites',
     projectBudget: 'R$ 2k - R$ 5k',
-    briefingName: '',
-    briefingIdea: '',
-    briefingColors: '',
-    briefingTypography: '',
-    briefingLogo: ''
+    briefingChallenge: '',
+    briefingAudience: '',
+    briefingReferences: '',
+    briefingTimeline: ''
   });
 
   const services = [
@@ -69,7 +68,7 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
         body: JSON.stringify({
           serviceInterest: formData.serviceInterest,
           projectBudget: formData.projectBudget,
-          briefingIdea: formData.briefingIdea,
+          briefingChallenge: formData.briefingChallenge,
           name: formData.name,
           company: formData.company
         })
@@ -92,14 +91,16 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
   const generateMockAiProposal = () => {
     const techName = formData.serviceInterest;
     setAiProposalText(`
-      Olá, ${formData.name}! Baseado nas diretrizes do briefing para o projeto "${formData.briefingName}", nossa equipe técnica desenhou um escopo inicial de alto impacto:
+      Olá, ${formData.name}! Analisando o cenário da sua empresa, nossa equipe estratégica elaborou as diretrizes iniciais:
 
-      🎯 FOCO COMERCIAL: Escalabilidade e engajamento através de um ecossistema focado em ${techName}.
-      ⚡ PERFORMANCE & DESIGN: Carregamento abaixo de 1s. Interface projetada com paleta [${formData.briefingColors || 'Primárias da marca'}] e tipografia [${formData.briefingTypography || 'Moderna sem serifa'}], inspirada diretamente nas suas referências visuais.
-      💎 ESTRUTURA CORE: ${formData.briefingIdea}
+      🎯 FOCO COMERCIAL: Superar o desafio de "${formData.briefingChallenge || 'posicionamento digital'}" impactando diretamente seu público-alvo (${formData.briefingAudience || 'clientes qualificados'}).
+      ⚡ SOLUÇÃO TÉCNICA: Desenvolvimento especializado focado em ${techName}, com estrutura de alta performance voltada para conversão.
+      💎 REFERÊNCIA E ESTÉTICA: O projeto buscará um padrão visual de elite, tomando como base o seu nível de exigência de mercado (${formData.briefingReferences || 'padrão global'}).
       
-      💰 ESTIMATIVA DE INVESTIMENTO: Alinhada com a faixa de ${formData.projectBudget}.
-      📆 PRÓXIMO PASSO: Já estamos mapeando seu protótipo inicial com Inteligência Artificial para te apresentar nas próximas horas no WhatsApp (${formData.whatsapp}).
+      💰 ESTIMATIVA DE INVESTIMENTO: Faixa de ${formData.projectBudget}.
+      📆 CRONOGRAMA: Alinharemos o esforço operacional com a sua expectativa de prazo (${formData.briefingTimeline || 'a definir'}).
+      
+      PRÓXIMO PASSO: Já estamos estruturando a arquitetura técnica dessa proposta. Falaremos no WhatsApp (${formData.whatsapp}) muito em breve.
     `);
   };
 
@@ -140,11 +141,10 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
       company: '',
       serviceInterest: 'Criação de Sites',
       projectBudget: 'R$ 2k - R$ 5k',
-      briefingName: '',
-      briefingIdea: '',
-      briefingColors: '',
-      briefingTypography: '',
-      briefingLogo: ''
+      briefingChallenge: '',
+      briefingAudience: '',
+      briefingReferences: '',
+      briefingTimeline: ''
     });
     setStep(1);
     setSubmitted(false);
@@ -362,34 +362,35 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
               {step === 3 && (
                 <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1">
                   <div className="p-4 bg-[#00E0FF]/5 border border-[#00E0FF]/20 rounded-xl mb-4">
-                    <p className="text-[#00E0FF] text-xs font-mono font-bold uppercase tracking-widest mb-1">Briefing Dinâmico 🚀</p>
-                    <p className="text-gray-400 text-xs">Transformamos seus dados diretamente em um prompt para nossa Inteligência Artificial criar seu primeiro protótipo visual.</p>
+                    <p className="text-[#00E0FF] text-xs font-mono font-bold uppercase tracking-widest mb-1">Briefing Executivo 🚀</p>
+                    <p className="text-gray-400 text-xs">Informações estratégicas para desenharmos uma solução que gera autoridade e lucro real, não apenas telas bonitas.</p>
                   </div>
                   
                   <div>
-                    <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Nome do Projeto ou Marca *</label>
-                    <input required type="text" name="briefingName" value={formData.briefingName} onChange={handleInputChange} placeholder="Ex: Plataforma AppiFarma" className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all" />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Ideia Central (O que precisamos construir?) *</label>
-                    <textarea required rows={3} name="briefingIdea" value={formData.briefingIdea} onChange={handleInputChange} placeholder="Descreva os objetivos, funcionalidades e o problema que vamos resolver..." className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all resize-none" />
+                    <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Maior Desafio Atual *</label>
+                    <textarea required rows={2} name="briefingChallenge" value={formData.briefingChallenge} onChange={handleInputChange} placeholder="Ex: Baixa conversão, site lento, ou posicionamento amador..." className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all resize-none" />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Paleta de Cores</label>
-                      <input type="text" name="briefingColors" value={formData.briefingColors} onChange={handleInputChange} placeholder="Ex: Preto, Roxo neon e Branco" className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all" />
+                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Público-Alvo</label>
+                      <input type="text" name="briefingAudience" value={formData.briefingAudience} onChange={handleInputChange} placeholder="Ex: Médicos, Classe A/B, etc." className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all" />
                     </div>
                     <div>
-                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Estilo Tipográfico</label>
-                      <input type="text" name="briefingTypography" value={formData.briefingTypography} onChange={handleInputChange} placeholder="Ex: Moderna, clean (Inter)" className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all" />
+                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Expectativa de Prazo</label>
+                      <select name="briefingTimeline" value={formData.briefingTimeline} onChange={handleInputChange} className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all appearance-none cursor-pointer">
+                        <option value="">Selecione uma opção...</option>
+                        <option value="Urgente (Próximos dias)">Urgente (Próximos dias)</option>
+                        <option value="1 a 2 semanas">1 a 2 semanas</option>
+                        <option value="1 mês">1 mês</option>
+                        <option value="A definir / Planejamento">A definir / Planejamento</option>
+                      </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Logo ou Referências Visuais</label>
-                    <input type="text" name="briefingLogo" value={formData.briefingLogo} onChange={handleInputChange} placeholder="Cole links de sites que você gosta ou o drive da sua logo" className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all" />
+                    <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Referências ou Benchmarks</label>
+                    <input type="text" name="briefingReferences" value={formData.briefingReferences} onChange={handleInputChange} placeholder="Concorrentes ou marcas que você admira..." className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-all" />
                   </div>
                 </div>
               )}
