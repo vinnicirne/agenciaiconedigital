@@ -108,22 +108,27 @@ export default function BriefingPage() {
 
   const searchCNPJ = async () => {
     const cleanCnpj = formData.cnpj.replace(/\D/g, '');
-    if (cleanCnpj.length !== 14) {
-      setCnpjError('Digite um CNPJ válido com 14 números.');
-      return;
-    }
+    if (cleanCnpj.length !== 14) return; // Não faz nada se não tiver 14 dígitos no onBlur
+    
     setCnpjError('');
     setCnpjLoading(true);
     try {
       const res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cleanCnpj}`);
-      if (!res.ok) throw new Error('CNPJ não encontrado.');
+      if (!res.ok) throw new Error('CNPJ não encontrado na base de dados.');
       const data = await res.json();
-      setFormData(prev => ({
-        ...prev,
-        company: data.razao_social || prev.company,
-        brandName: data.nome_fantasia || data.razao_social || prev.brandName,
-        cityState: (data.municipio && data.uf) ? `${data.municipio} / ${data.uf}` : prev.cityState
-      }));
+      
+      setFormData(prev => {
+        // Se a API não trouxe Nome Fantasia ou trouxe o mesmo nome da Razão Social (comum em MEI),
+        // não preenchemos o Nome da Marca e deixamos o cliente preencher.
+        const hasValidFantasia = data.nome_fantasia && data.nome_fantasia.trim() !== '' && data.nome_fantasia !== data.razao_social;
+        
+        return {
+          ...prev,
+          company: data.razao_social || prev.company,
+          brandName: hasValidFantasia ? data.nome_fantasia : prev.brandName,
+          cityState: (data.municipio && data.uf) ? `${data.municipio} / ${data.uf}` : prev.cityState
+        };
+      });
     } catch (err: any) {
       setCnpjError(err.message);
     } finally {
@@ -222,13 +227,19 @@ export default function BriefingPage() {
                     <Input label="Seu Nome Completo" name="name" value={formData.name} onChange={handleInputChange} required />
                     
                     <div className="md:col-span-2 space-y-2">
-                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest">CNPJ (Busca Automática)</label>
-                      <div className="flex gap-2">
-                        <input type="text" name="cnpj" value={formData.cnpj} onChange={handleInputChange} placeholder="Apenas números ou com pontuação..." className="flex-grow bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-colors" />
-                        <button type="button" onClick={searchCNPJ} disabled={cnpjLoading} className="px-6 py-3 rounded-xl text-xs font-bold text-black bg-[#00E0FF] hover:bg-cyan-300 transition-colors disabled:opacity-50 whitespace-nowrap flex items-center gap-2">
-                          {cnpjLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Buscar'}
-                        </button>
+                      <div className="flex items-center gap-2">
+                        <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest">CNPJ (Busca Automática)</label>
+                        {cnpjLoading && <Loader2 className="w-3 h-3 text-[#00E0FF] animate-spin" />}
                       </div>
+                      <input 
+                        type="text" 
+                        name="cnpj" 
+                        value={formData.cnpj} 
+                        onChange={handleInputChange} 
+                        onBlur={searchCNPJ}
+                        placeholder="Ex: 00.000.000/0000-00 (Digite e clique fora)" 
+                        className="w-full bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-colors" 
+                      />
                       {cnpjError && <p className="text-red-400 text-xs mt-1">{cnpjError}</p>}
                     </div>
 
