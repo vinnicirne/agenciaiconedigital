@@ -115,15 +115,20 @@ export default function BudgetModal({ isOpen, onClose }: BudgetModalProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao enviar orçamento');
+        let errMessage = 'Erro desconhecido ao enviar orçamento';
+        try {
+          const errorData = await response.json();
+          errMessage = errorData.error?.message || errorData.error || errMessage;
+        } catch(e) {}
+        throw new Error(errMessage);
       }
 
       setLoading(false);
       setSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Falha no envio do formulário:', error);
       setLoading(false);
-      alert('Não foi possível enviar a solicitação no momento. Verifique sua conexão ou tente novamente mais tarde.');
+      alert('Falha na API: ' + (error.message || 'Verifique sua conexão ou tente novamente.'));
     }
   };
 
