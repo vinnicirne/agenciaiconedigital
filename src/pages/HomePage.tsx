@@ -149,7 +149,7 @@ export default function HomePage({ onOpenBudget }: HomePageProps) {
             return (
               <div 
                 key={srv.id}
-                className="group relative bg-[#0b0b0b] rounded-2xl border border-white/5 p-6 hover:border-[#00E0FF]/30 transition-all duration-300 hover:scale-[1.01] flex flex-col gap-5 overflow-hidden"
+                className="group relative bg-[#0b0b0b] rounded-2xl border border-white/5 p-6 hover:border-[#00E0FF]/30 transition-all duration-300 hover:scale-[1.01] flex flex-col gap-5 overflow-hidden transform-gpu"
               >
                 {/* Micro accent gradient hover effect */}
                 <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-[#00E0FF]/5 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500" />
