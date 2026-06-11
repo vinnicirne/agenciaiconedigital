@@ -147,16 +147,21 @@ async function startServer() {
         </ul>
       `;
 
-      const data = await resend.emails.send({
+      const { data, error } = await resend.emails.send({
         from: 'onboarding@resend.dev',
         to: ['agenciaiconedigital@gmail.com', 'viniciuscirne@gmail.com'],
-        subject: \`Novo Orçamento: \${name} - \${serviceInterest}\`,
+        subject: `Novo Orçamento: ${name} - ${serviceInterest}`,
         html: emailHtml,
       });
 
+      if (error) {
+        console.error('Resend API Error:', error);
+        return res.status(400).json({ success: false, error });
+      }
+
       res.json({ success: true, data });
     } catch (e: any) {
-      console.error('Falha ao enviar e-mail via Resend:', e.message);
+      console.error('Falha interna ao enviar e-mail:', e.message);
       res.status(500).json({ success: false, error: e.message });
     }
   });
