@@ -6,6 +6,8 @@ export default function BriefingPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [cnpjLoading, setCnpjLoading] = useState(false);
+  const [cnpjError, setCnpjError] = useState('');
 
   // Massive state for 5-step briefing
   const [formData, setFormData] = useState({
@@ -104,6 +106,31 @@ export default function BriefingPage() {
     setStep(prev => prev - 1);
   };
 
+  const searchCNPJ = async () => {
+    const cleanCnpj = formData.cnpj.replace(/\D/g, '');
+    if (cleanCnpj.length !== 14) {
+      setCnpjError('Digite um CNPJ válido com 14 números.');
+      return;
+    }
+    setCnpjError('');
+    setCnpjLoading(true);
+    try {
+      const res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cleanCnpj}`);
+      if (!res.ok) throw new Error('CNPJ não encontrado.');
+      const data = await res.json();
+      setFormData(prev => ({
+        ...prev,
+        company: data.razao_social || prev.company,
+        brandName: data.nome_fantasia || data.razao_social || prev.brandName,
+        cityState: (data.municipio && data.uf) ? `${data.municipio} / ${data.uf}` : prev.cityState
+      }));
+    } catch (err: any) {
+      setCnpjError(err.message);
+    } finally {
+      setCnpjLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -193,14 +220,27 @@ export default function BriefingPage() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input label="Seu Nome Completo" name="name" value={formData.name} onChange={handleInputChange} required />
+                    
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest">CNPJ (Busca Automática)</label>
+                      <div className="flex gap-2">
+                        <input type="text" name="cnpj" value={formData.cnpj} onChange={handleInputChange} placeholder="Apenas números ou com pontuação..." className="flex-grow bg-[#121212] border border-white/5 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#00E0FF] transition-colors" />
+                        <button type="button" onClick={searchCNPJ} disabled={cnpjLoading} className="px-6 py-3 rounded-xl text-xs font-bold text-black bg-[#00E0FF] hover:bg-cyan-300 transition-colors disabled:opacity-50 whitespace-nowrap flex items-center gap-2">
+                          {cnpjLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Buscar'}
+                        </button>
+                      </div>
+                      {cnpjError && <p className="text-red-400 text-xs mt-1">{cnpjError}</p>}
+                    </div>
+
                     <Input label="Razão Social / Empresa" name="company" value={formData.company} onChange={handleInputChange} required />
-                    <Input label="Nome da Marca" name="brandName" value={formData.brandName} onChange={handleInputChange} />
-                    <Input label="CNPJ (opcional)" name="cnpj" value={formData.cnpj} onChange={handleInputChange} />
+                    <Input label="Nome da Marca (Fantasia)" name="brandName" value={formData.brandName} onChange={handleInputChange} />
                     <Input label="WhatsApp Principal" name="whatsapp" value={formData.whatsapp} onChange={handleInputChange} required type="tel" />
                     <Input label="E-mail de Contato" name="email" value={formData.email} onChange={handleInputChange} required type="email" />
                     <Input label="Cidade / Estado" name="cityState" value={formData.cityState} onChange={handleInputChange} />
                     <Input label="Site Atual (se houver)" name="currentWebsite" value={formData.currentWebsite} onChange={handleInputChange} />
-                    <Input label="Redes Sociais (Links)" name="socialMedia" value={formData.socialMedia} onChange={handleInputChange} />
+                    <div className="md:col-span-2">
+                      <Input label="Redes Sociais (Links)" name="socialMedia" value={formData.socialMedia} onChange={handleInputChange} />
+                    </div>
                   </div>
 
                   <div className="space-y-6 pt-4">
