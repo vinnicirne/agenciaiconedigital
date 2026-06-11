@@ -226,7 +226,7 @@ export default function BriefingPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input label="Seu Nome Completo" name="name" value={formData.name} onChange={handleInputChange} required />
                     
-                    <div className="md:col-span-2 space-y-2">
+                    <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest">CNPJ (Busca Automática)</label>
                         {cnpjLoading && <Loader2 className="w-3 h-3 text-[#00E0FF] animate-spin" />}
