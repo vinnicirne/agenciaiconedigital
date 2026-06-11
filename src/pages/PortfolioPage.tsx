@@ -220,8 +220,8 @@ export default function PortfolioPage({ selectedProject, setSelectedProject, onO
                     
                     <div className="h-px bg-white/5 w-full my-2" />
                     
-                    <div className="flex items-center justify-between text-[11px] font-mono text-gray-400 pt-2">
-                      <span>Resultado:</span>
+                    <div className="flex flex-col text-[11px] font-mono text-gray-400 pt-2 gap-1">
+                      <span className="font-bold">Resultado:</span>
                       <span className="text-[#00E0FF] font-semibold">{proj.result}</span>
                     </div>
                   </div>
